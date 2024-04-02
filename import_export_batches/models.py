@@ -23,7 +23,7 @@ from voter_guide.models import ORGANIZATION_WORD
 import wevote_functions.admin
 from wevote_functions.functions import convert_to_int, positive_value_exists, \
     LANGUAGE_CODE_ENGLISH, LANGUAGE_CODE_SPANISH
-import xml.etree.ElementTree as ElementTree
+import defusedxml.ElementTree
 
 POSITION = 'POSITION'
 ANY_STANCE = 'ANY_STANCE'  # This is a way to indicate when we want to return any stance (support, oppose, no_stance)
@@ -2066,7 +2066,7 @@ class BatchManager(models.Manager):
         # # xml_data_list_json = list(xml_data)
         # structured_json = json.dumps(xml_data)
 
-        xml_tree = ElementTree.parse(request)
+        xml_tree = defusedxml.ElementTree.parse(request)
         request.close()
         xml_root = xml_tree.getroot()
 
@@ -3363,7 +3363,7 @@ class BatchManager(models.Manager):
 
         # Retrieve from XML
         if batch_file:
-            xml_tree = ElementTree.parse(batch_file)
+            xml_tree = defusedxml.ElementTree.parse(batch_file)
             batch_set_name = batch_file.name + " - " + str(import_date)
 
         else:
@@ -3373,7 +3373,7 @@ class BatchManager(models.Manager):
             # # xml_data_list_json = list(xml_data)
             # structured_json = json.dumps(xml_data)
 
-            xml_tree = ElementTree.parse(request)
+            xml_tree = defusedxml.ElementTree.parse(request)
             request.close()
 
             # set batch_set_name as file_name

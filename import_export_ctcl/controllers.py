@@ -2,7 +2,6 @@
 # Brought to you by We Vote. Be good.
 # -*- coding: UTF-8 -*-
 
-import xml.etree.ElementTree as ElementTree
 from .models import CandidateSelection, CTCLApiCounterManager
 from ballot.models import BallotReturnedManager
 from config.base import get_environment_variable
@@ -16,6 +15,7 @@ from polling_location.models import PollingLocationManager
 import requests
 import wevote_functions.admin
 from wevote_functions.functions import extract_state_code_from_address_string, positive_value_exists
+import defusedxml.ElementTree
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -87,7 +87,7 @@ def import_ctcl_from_xml(request):
         logger.debug("TO BE IMPLEMENTED: Load CTCL XML from url")
     else:
         # Load saved xml from local file
-        xml_tree = ElementTree.parse(CTCL_SAMPLE_XML_FILE)
+        xml_tree = defusedxml.ElementTree.parse(CTCL_SAMPLE_XML_FILE)
         xml_root = xml_tree.getroot()
         logger.debug("Loading CTCL sample XML from local file")
 

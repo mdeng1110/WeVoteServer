@@ -10,7 +10,7 @@ import json
 import requests
 import wevote_functions.admin
 from wevote_functions.functions import positive_value_exists, process_request_from_master
-import xml.etree.ElementTree as MyElementTree
+import defusedxml.ElementTree
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -219,7 +219,7 @@ def retrieve_polling_locations_data_from_xml(xml_file_location):
     #     <zip>22801</zip>
     #   </address>
     # </polling_location>
-    tree = MyElementTree.parse(xml_file_location)
+    tree = defusedxml.ElementTree.parse(xml_file_location)
     root = tree.getroot()
     polling_locations_list = []
     for polling_location in root.findall('polling_location'):

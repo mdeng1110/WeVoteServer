@@ -6,9 +6,9 @@ from .models import ElectoralDistrict, ElectoralDistrictManager
 import wevote_functions.admin
 from wevote_functions.functions import positive_value_exists, convert_to_int, extract_state_from_ocd_division_id, \
     extract_district_from_ocd_division_id
-import xml.etree.ElementTree as ElementTree
 from exception.models import handle_exception
 from exception.models import handle_record_found_more_than_one_exception
+import defusedxml.ElementTree
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -21,7 +21,7 @@ def electoral_districts_import_from_sample_file(filename):
     # Load saved xml from local file
     logger.info("Loading electoral_districts from local XML file")
 
-    xml_tree = ElementTree.parse(filename)
+    xml_tree = defusedxml.ElementTree.parse(filename)
     xml_root = xml_tree.getroot()
 
     electoral_district_item_list = ''

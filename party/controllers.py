@@ -5,8 +5,8 @@
 from .models import Party, PartyManager
 import wevote_functions.admin
 from wevote_functions.functions import positive_value_exists, LANGUAGE_CODE_ENGLISH
-import xml.etree.ElementTree as ElementTree
 from exception.models import handle_exception
+import defusedxml.ElementTree
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -19,7 +19,7 @@ def party_import_from_sample_file(filename):
     # Load saved xml from local file
     logger.info("Loading parties from local XML file")
 
-    xml_tree = ElementTree.parse(filename)
+    xml_tree = defusedxml.ElementTree.parse(filename)
     # xml_tree = ElementTree.parse("/home/neelam/WeVote/vip_data_from_ctcl-Nov28_2016.xml")
     xml_root = xml_tree.getroot()
 
