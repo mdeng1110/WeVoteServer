@@ -184,7 +184,7 @@ def retrieve_sql_files_from_master_server(request):
         while end < 20000000:
             t2 = time.time()
             response = requests.get("https://api.wevoteusa.org/apis/v1/retrieveSQLTables/",
-                                    params={'table': table_name, 'start': start, 'end': end})
+                                    params={'table': table_name, 'start': start, 'end': end}, timeout=60)
             structured_json = json.loads(response.text)
             if structured_json['success'] is False:
                 print("FAILED:  Did not receive '" + table_name + " from server")
