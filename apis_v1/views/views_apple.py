@@ -120,8 +120,8 @@ def sign_in_with_apple_view(request):  # appleSignInSave appleSignInSaveView
 
 def payload(message, status):
     return HttpResponse(
-        json.dumps({"status": status, "payload": message} if message is not None else {"status": status})
-    )
+        json.dumps({"status": status, "payload": message} if message is not None else {"status": status}), 
+    content_type="application/json")
 
 
 def success(message=None):
