@@ -7,6 +7,7 @@ from config.base import get_environment_variable
 import logging
 import requests
 from wevote_functions.functions import positive_value_exists
+from security import safe_requests
 
 AWS_ACCESS_KEY_ID = get_environment_variable("AWS_ACCESS_KEY_ID")
 AWS_HOSTED_ZONE_ID = get_environment_variable("AWS_HOSTED_ZONE_ID")
@@ -25,7 +26,7 @@ HEADERS = {
 
 def get_current_fastly_config_version():
     url = "%s/service/%s/version" % (FASTLY_API_HOSTNAME, FASTLY_API_SERVICE_ID)
-    response = requests.get(url, headers=HEADERS)
+    response = safe_requests.get(url, headers=HEADERS)
     if response.status_code != 200:
         logging.warning("Unable to get list of versions: %s", response.content)
         return None
@@ -52,7 +53,7 @@ def get_wevote_subdomain_status(chosen_subdomain_string):
                         current_fastly_version_number=current_fastly_version_number,
                         chosen_subdomain_string=chosen_subdomain_string)
         try:
-            response = requests.get(url, headers=HEADERS)
+            response = safe_requests.get(url, headers=HEADERS)
             status += "FASTLY_STATUS_CODE: " + str(response.status_code) + " "
             if response.status_code == 200:
                 json_response_as_list = response.json()

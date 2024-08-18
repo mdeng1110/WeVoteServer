@@ -9,13 +9,13 @@ import re
 import string
 from math import log10
 import django.utils.html
-import requests
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from nameparser import HumanName
 
 import wevote_functions.admin
+from security import safe_requests
 
 # We don't want to include the actual constants from organization/models.py, since that can cause include conflicts
 CORPORATION = 'C'
@@ -1500,7 +1500,7 @@ def process_request_from_master(request, message_text, get_url, get_params):
     logger.info(message_text)
     print("process_request_from_master: " + message_text)  # Please don't remove this line
 
-    response = requests.get(get_url, params=get_params)
+    response = safe_requests.get(get_url, params=get_params)
 
     structured_json = json.loads(response.text)
     if 'success' in structured_json and not structured_json['success']:
