@@ -42,7 +42,7 @@ def analyze_remote_url(image_url_https):
 
     if image_url_valid:
         try:
-            response = requests.get(image_url_https)
+            response = requests.get(image_url_https, timeout=60)
             image = Image.open(BytesIO(response.content))
             image_width, image_height = image.size
             image_format = image.format
