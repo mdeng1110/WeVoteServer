@@ -16,6 +16,7 @@ from scheduled_tasks.models import BackgroundTaskOutputManager
 from scheduled_tasks.task_models import WeTask
 from scheduled_tasks.task_models_completed import WeTaskCompleted
 import wevote_functions.admin
+from security import safe_command
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -139,7 +140,7 @@ def read_output_record(request):
 def we_task(task_parameters, verbose_name="", schedule='', name=''):  # pep8 parsing is wrong, these are required
     # print("We_task parms: " + task_parameters)
     bits = task_parameters.split(" ")
-    p1 = subprocess.Popen(bits, stdout=subprocess.PIPE)
+    p1 = safe_command.run(subprocess.Popen, bits, stdout=subprocess.PIPE)
     output = p1.communicate()[0]
 
     nowdt = datetime.now(pytz.timezone("America/Los_Angeles"))
