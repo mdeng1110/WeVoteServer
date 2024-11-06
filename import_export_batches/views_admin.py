@@ -43,12 +43,12 @@ from import_export_ctcl.controllers import CTCL_VOTER_INFO_URL
 import json
 from polling_location.models import PollingLocation, PollingLocationManager
 from position.models import POSITION
-import random
 import requests
 from voter.models import voter_has_authority
 from voter_guide.models import ORGANIZATION_WORD
 import wevote_functions.admin
 from wevote_functions.functions import convert_to_int, positive_value_exists, STATE_CODE_MAP
+import secrets
 
 MAP_POINTS_RETRIEVED_EACH_BATCH_CHUNK = 125  # 125. Formerly 250 and 111
 
@@ -3284,7 +3284,7 @@ def retrieve_ballots_for_polling_locations_api_v4_internal_view(
             polling_location_query = polling_location_query.exclude(polling_location_deleted=True)
 
             # Randomly change the sort order so we over time load different map points (before timeout)
-            random_sorting = random.randint(1, 5)
+            random_sorting = secrets.SystemRandom().randint(1, 5)
             first_retrieve_limit = MAP_POINTS_RETRIEVED_EACH_BATCH_CHUNK  # 125. Formerly 250 and 111
             if random_sorting == 1:
                 # Ordering by "line1" creates a bit of (locational) random order
