@@ -18,9 +18,9 @@ import copy
 from exception.models import handle_record_found_more_than_one_exception
 from image.controllers import VOTE_SMART, cache_master_and_resized_image
 from position.models import PositionManager, PERCENT_RATING
-import requests
 import wevote_functions.admin
 from wevote_functions.functions import convert_to_int, positive_value_exists
+from security import safe_requests
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -615,7 +615,7 @@ def make_request(cls, method, **kwargs):
     if not kwargs.get('o'):
         kwargs['o'] = "JSON"
     url = get_api_route(cls, method)
-    resp = requests.get(url, params=kwargs)
+    resp = safe_requests.get(url, params=kwargs)
     if resp.status_code == 200:
         return resp.json()
     else:

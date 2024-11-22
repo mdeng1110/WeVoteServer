@@ -13,9 +13,9 @@ from import_export_google_civic.controllers import groom_and_store_google_civic_
 import json
 from party.controllers import party_import_from_xml_data
 from polling_location.models import PollingLocationManager
-import requests
 import wevote_functions.admin
 from wevote_functions.functions import extract_state_code_from_address_string, positive_value_exists
+from security import safe_requests
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -418,7 +418,7 @@ def retrieve_ctcl_ballot_items_for_one_voter_api(
     try:
         api_key = CTCL_API_KEY
         # Get the ballot info at this address
-        response = requests.get(
+        response = safe_requests.get(
             CTCL_VOTER_INFO_URL,
             headers=MAIL_HEADERS,
             params={
@@ -622,7 +622,7 @@ def retrieve_ctcl_ballot_items_from_polling_location_api(
         try:
             api_key = CTCL_API_KEY
             # Get the ballot info at this address
-            response = requests.get(
+            response = safe_requests.get(
                 CTCL_VOTER_INFO_URL,
                 headers=MAIL_HEADERS,
                 params={

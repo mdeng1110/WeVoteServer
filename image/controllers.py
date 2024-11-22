@@ -2,7 +2,6 @@
 # Brought to you by We Vote. Be good.
 # -*- coding: UTF-8 -*-
 
-import requests
 import wevote_functions.admin
 from .functions import analyze_remote_url, analyze_image_file, analyze_image_in_memory
 from .models import WeVoteImageManager, WeVoteImage, \
@@ -26,6 +25,7 @@ from twitter.models import TwitterUserManager
 from voter.models import VoterManager, VoterDeviceLink, VoterDeviceLinkManager, VoterAddressManager, VoterAddress, Voter
 from voter_guide.models import VoterGuideManager
 from wevote_functions.functions import positive_value_exists, convert_to_int
+from security import safe_requests
 
 logger = wevote_functions.admin.get_logger(__name__)
 HTTP_OK = 200
@@ -914,7 +914,7 @@ def retrieve_facebook_image_url(facebook_user_id):
 
     get_url = "https://graph.facebook.com/v3.1/{facebook_user_id}/picture?width=200&height=200"\
         .format(facebook_user_id=facebook_user_id)
-    response = requests.get(get_url)
+    response = safe_requests.get(get_url)
     if response.status_code == HTTP_OK:
         # new facebook profile image url found
         results['facebook_profile_image_url'] = response.url
