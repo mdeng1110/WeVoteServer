@@ -914,7 +914,7 @@ def retrieve_facebook_image_url(facebook_user_id):
 
     get_url = "https://graph.facebook.com/v3.1/{facebook_user_id}/picture?width=200&height=200"\
         .format(facebook_user_id=facebook_user_id)
-    response = requests.get(get_url)
+    response = requests.get(get_url, timeout=60)
     if response.status_code == HTTP_OK:
         # new facebook profile image url found
         results['facebook_profile_image_url'] = response.url

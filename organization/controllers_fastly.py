@@ -25,7 +25,7 @@ HEADERS = {
 
 def get_current_fastly_config_version():
     url = "%s/service/%s/version" % (FASTLY_API_HOSTNAME, FASTLY_API_SERVICE_ID)
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, headers=HEADERS, timeout=60)
     if response.status_code != 200:
         logging.warning("Unable to get list of versions: %s", response.content)
         return None
@@ -52,7 +52,7 @@ def get_wevote_subdomain_status(chosen_subdomain_string):
                         current_fastly_version_number=current_fastly_version_number,
                         chosen_subdomain_string=chosen_subdomain_string)
         try:
-            response = requests.get(url, headers=HEADERS)
+            response = requests.get(url, headers=HEADERS, timeout=60)
             status += "FASTLY_STATUS_CODE: " + str(response.status_code) + " "
             if response.status_code == 200:
                 json_response_as_list = response.json()
@@ -93,7 +93,7 @@ def clone_current_fastly_config_version(current_fastly_version_number):
                         current_fastly_version_number=current_fastly_version_number)
 
         try:
-            response = requests.put(url, headers=HEADERS)
+            response = requests.put(url, headers=HEADERS, timeout=60)
             status += "FASTLY_STATUS_CODE: " + str(response.status_code) + " "
             if response.status_code == 200:
                 version = response.json()
@@ -138,7 +138,7 @@ def add_fastly_domain(new_fastly_version_number, new_subdomain):
         'name': new_full_domain,
     }
     try:
-        response = requests.post(url, headers=HEADERS, data=data)
+        response = requests.post(url, headers=HEADERS, data=data, timeout=60)
         status += "FASTLY_STATUS_CODE: " + str(response.status_code) + " "
         if response.status_code == 200:
             json_response = response.json()
@@ -168,7 +168,7 @@ def add_fastly_domain(new_fastly_version_number, new_subdomain):
 def del_fastly_domain(new_version, domain_to_remove):
     url = "%s/service/%s/version/%s/domain/%s" % (FASTLY_API_HOSTNAME, FASTLY_API_SERVICE_ID,
                                                   new_version, domain_to_remove)
-    response = requests.delete(url, headers=HEADERS)
+    response = requests.delete(url, headers=HEADERS, timeout=60)
     if response.status_code != 200:
         logging.warning("Unable to remove domain (%s) to new version (%d) of service", domain_to_remove, new_version)
         return False
@@ -186,7 +186,7 @@ def activate_new_fastly_config_version(new_fastly_version_number):
                         fastly_api_service_id=FASTLY_API_SERVICE_ID,
                         new_fastly_version_number=new_fastly_version_number)
         try:
-            response = requests.put(url, headers=HEADERS)
+            response = requests.put(url, headers=HEADERS, timeout=60)
             status += "FASTLY_STATUS_CODE: " + str(response.status_code) + " "
             if response.status_code == 200:
                 json_response = response.json()

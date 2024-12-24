@@ -1611,7 +1611,7 @@ def retrieve_representatives_from_google_civic_api(text_for_map_search):
     response = requests.get(REPRESENTATIVES_BY_ADDRESS_URL, params={
         "key": GOOGLE_CIVIC_API_KEY,
         "address": text_for_map_search,
-    })
+    }, timeout=60)
 
     structured_json = json.loads(response.text)
     if 'success' in structured_json and not positive_value_exists(structured_json['success']):
@@ -1879,18 +1879,18 @@ def retrieve_one_ballot_from_google_civic_api(text_for_map_search, incoming_goog
             "key": GOOGLE_CIVIC_API_KEY,
             "address": text_for_map_search,
             "electionId": 2000,  # The Google Civic API Test election
-        })
+        }, timeout=60)
     elif positive_value_exists(incoming_google_civic_election_id):
         response = requests.get(VOTER_INFO_URL, params={
             "key": GOOGLE_CIVIC_API_KEY,
             "address": text_for_map_search,
             "electionId": incoming_google_civic_election_id,
-        })
+        }, timeout=60)
     else:
         response = requests.get(VOTER_INFO_URL, params={
             "key": GOOGLE_CIVIC_API_KEY,
             "address": text_for_map_search,
-        })
+        }, timeout=60)
 
     structured_json = json.loads(response.text)
     if 'success' in structured_json and structured_json['success'] is False:
@@ -2157,7 +2157,7 @@ def retrieve_from_google_civic_api_election_query():
 
     response = requests.get(ELECTION_QUERY_URL, params={
         "key": GOOGLE_CIVIC_API_KEY,  # This comes from an environment variable
-    })
+    }, timeout=60)
 
     # Use Google Civic API call counter to track the number of queries we are doing each day
     google_civic_api_counter_manager = GoogleCivicApiCounterManager()

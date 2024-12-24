@@ -1500,7 +1500,7 @@ def process_request_from_master(request, message_text, get_url, get_params):
     logger.info(message_text)
     print("process_request_from_master: " + message_text)  # Please don't remove this line
 
-    response = requests.get(get_url, params=get_params)
+    response = requests.get(get_url, params=get_params, timeout=60)
 
     structured_json = json.loads(response.text)
     if 'success' in structured_json and not structured_json['success']:
