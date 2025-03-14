@@ -4,12 +4,12 @@ import os
 import re
 
 import psycopg2
-import requests
 import time
 from config.base import get_environment_variable
 from django.http import HttpResponse
 import wevote_functions.admin
 from wevote_functions.functions import positive_value_exists
+from security import safe_requests
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -183,7 +183,7 @@ def retrieve_sql_files_from_master_server(request):
         final_lines_count = 0
         while end < 20000000:
             t2 = time.time()
-            response = requests.get("https://api.wevoteusa.org/apis/v1/retrieveSQLTables/",
+            response = safe_requests.get("https://api.wevoteusa.org/apis/v1/retrieveSQLTables/",
                                     params={'table': table_name, 'start': start, 'end': end})
             structured_json = json.loads(response.text)
             if structured_json['success'] is False:

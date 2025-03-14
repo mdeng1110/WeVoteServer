@@ -20,13 +20,13 @@ import json
 from measure.models import ContestMeasureManager
 from office.models import ContestOfficeManager, ContestOfficeListManager
 from polling_location.models import PollingLocationManager
-import requests
 from voter.models import fetch_voter_id_from_voter_device_link, VoterAddressManager
 from wevote_functions.functions import convert_district_scope_to_ballotpedia_race_office_level, \
     convert_state_text_to_state_code, convert_to_int, \
     extract_district_from_ocd_division_id, extract_district_id_from_ocd_division_id, \
     extract_state_code_from_address_string, extract_state_from_ocd_division_id, extract_vote_usa_office_id, \
     is_voter_device_id_valid, logger, positive_value_exists, STATE_CODE_MAP
+from security import safe_requests
 
 GEOCODE_TIMEOUT = 10
 GOOGLE_CIVIC_API_KEY = get_environment_variable("GOOGLE_CIVIC_API_KEY")
@@ -1608,7 +1608,7 @@ def retrieve_representatives_from_google_civic_api(text_for_map_search):
     # return results
 
     # print("retrieving one ballot for " + str(text_for_map_search))
-    response = requests.get(REPRESENTATIVES_BY_ADDRESS_URL, params={
+    response = safe_requests.get(REPRESENTATIVES_BY_ADDRESS_URL, params={
         "key": GOOGLE_CIVIC_API_KEY,
         "address": text_for_map_search,
     })
@@ -1875,19 +1875,19 @@ def retrieve_one_ballot_from_google_civic_api(text_for_map_search, incoming_goog
     # logger.info("Loading ballot for one address from voterInfoQuery from Google servers")
     print("retrieving one ballot for " + str(incoming_google_civic_election_id) + ": " + str(text_for_map_search))
     if positive_value_exists(use_test_election):
-        response = requests.get(VOTER_INFO_URL, params={
+        response = safe_requests.get(VOTER_INFO_URL, params={
             "key": GOOGLE_CIVIC_API_KEY,
             "address": text_for_map_search,
             "electionId": 2000,  # The Google Civic API Test election
         })
     elif positive_value_exists(incoming_google_civic_election_id):
-        response = requests.get(VOTER_INFO_URL, params={
+        response = safe_requests.get(VOTER_INFO_URL, params={
             "key": GOOGLE_CIVIC_API_KEY,
             "address": text_for_map_search,
             "electionId": incoming_google_civic_election_id,
         })
     else:
-        response = requests.get(VOTER_INFO_URL, params={
+        response = safe_requests.get(VOTER_INFO_URL, params={
             "key": GOOGLE_CIVIC_API_KEY,
             "address": text_for_map_search,
         })
@@ -2155,7 +2155,7 @@ def retrieve_from_google_civic_api_election_query():
         }
         return results
 
-    response = requests.get(ELECTION_QUERY_URL, params={
+    response = safe_requests.get(ELECTION_QUERY_URL, params={
         "key": GOOGLE_CIVIC_API_KEY,  # This comes from an environment variable
     })
 
