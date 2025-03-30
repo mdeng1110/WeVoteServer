@@ -425,7 +425,7 @@ def retrieve_ctcl_ballot_items_for_one_voter_api(
                 "key": api_key,
                 "electionId": ctcl_election_uuid,
                 "address": text_for_map_search,
-            })
+            }, timeout=60)
         one_ballot_json = json.loads(response.text)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -629,7 +629,7 @@ def retrieve_ctcl_ballot_items_from_polling_location_api(
                     "key": api_key,
                     "electionId": ctcl_election_uuid,
                     "address": text_for_map_search,
-                })
+                }, timeout=60)
             one_ballot_json = json.loads(response.text)
 
             # Use Ballotpedia API call counter to track the number of queries we are doing each day

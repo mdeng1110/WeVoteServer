@@ -226,7 +226,7 @@ def organization_index_view(request, organization_incoming_domain='', campaign_m
         # req_url = 'https://' + organization_incoming_domain + '/' + campaign_main
         print(req_url)
         verify_bool = not ('localhost' in organization_incoming_domain or '127.0.0.1' in organization_incoming_domain)
-        text = requests.get(req_url, verify=verify_bool).text
+        text = requests.get(req_url, verify=verify_bool, timeout=60).text
         # text = '<!DOCTYPE html><html><body>main.3bdb849a6b28de49eb2e.js</body></html>'
         campaign_main_js = re.search(r"<body>(.*?)<\/body>", text)[1]
 

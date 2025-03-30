@@ -153,7 +153,7 @@ def we_task(task_parameters, verbose_name="", schedule='', name=''):  # pep8 par
 @background()
 def we_task_http(task_parameters, verbose_name="", schedule='', name=''):  # pep8 parsing is wrong, these are required
     # print("We_task HTTP parms: " + task_parameters)
-    r = python_requests.get(task_parameters)
+    r = python_requests.get(task_parameters, timeout=60)
     output = r.text
     # print("r.text  ", r.text)
     nowdt = datetime.now(pytz.timezone("America/Los_Angeles"))

@@ -312,7 +312,7 @@ def batch_list_process_view(request):
                 #     "address": text_for_map_search,
                 #     "electionId": incoming_google_civic_election_id,
                 # })
-                response = requests.get(batch_uri)
+                response = requests.get(batch_uri, timeout=60)
                 structured_json = json.loads(response.text)
 
                 if "api/contains" in batch_uri:

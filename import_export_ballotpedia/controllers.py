@@ -293,7 +293,7 @@ def attach_ballotpedia_election_by_district_from_api(election, google_civic_elec
             "filters[district][in]":    district_string,
             "filters[date][eq]":        election_day_text,
             "order[date]":              "ASC",
-        })
+        }, timeout=60)
 
         if not hasattr(response, 'text') or not positive_value_exists(response.text):
             status += "NO_RESPONSE_TEXT_FOUND-CHUNK: " + str(which_chunk_of_district_strings) + " "
@@ -571,7 +571,7 @@ def retrieve_ballotpedia_candidates_by_district_from_api(google_civic_election_i
             "access_token": BALLOTPEDIA_API_KEY,
             "filters[race][in]": ballotpedia_race_ids_string,
             "limit": 1000,
-        })
+        }, timeout=60)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day
         ballotpedia_api_counter_manager = BallotpediaApiCounterManager()
@@ -705,7 +705,7 @@ def retrieve_ballot_items_from_polling_location(
             response = requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
                 "access_token": BALLOTPEDIA_API_KEY,
                 "point": latitude_longitude,
-            })
+            }, timeout=60)
 
             structured_json = json.loads(response.text)
 
@@ -842,7 +842,7 @@ def retrieve_ballotpedia_ballot_items_from_polling_location_api_v4(
                 params={
                     "lat": polling_location.latitude,
                     "long": polling_location.longitude,
-                })
+                }, timeout=60)
             structured_json = json.loads(response.text)
 
             # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -892,7 +892,7 @@ def retrieve_ballotpedia_ballot_items_from_polling_location_api_v4(
             response = requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
                 "districts": office_district_string,
                 "election_date": election_day_text,
-            })
+            }, timeout=60)
             structured_json = json.loads(response.text)
 
             # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -1104,7 +1104,7 @@ def retrieve_ballotpedia_ballot_items_for_one_voter_api_v4(
             params={
                 "lat": ballot_returned.latitude,
                 "long": ballot_returned.longitude,
-            })
+            }, timeout=60)
         structured_json = json.loads(response.text)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -1156,7 +1156,7 @@ def retrieve_ballotpedia_ballot_items_for_one_voter_api_v4(
         response = requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
             "districts": office_district_string,
             "election_date": election_day_text,
-        })
+        }, timeout=60)
         structured_json = json.loads(response.text)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -1307,7 +1307,7 @@ def retrieve_ballotpedia_district_id_list_for_polling_location(
             response = requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
                 "access_token": BALLOTPEDIA_API_KEY,
                 "point": latitude_longitude,
-            })
+            }, timeout=60)
 
             #if response.status_code == requests.codes.ok:
             structured_json = json.loads(response.text)
@@ -1501,7 +1501,7 @@ def retrieve_ballotpedia_offices_by_district_from_api(google_civic_election_id, 
                 "filters[office_district][in]":                 office_district_string,
                 "filters[" + kind_of_election_dict['kind_of_election_filter_key'] + "][eq]":   election_day_text,
                 "limit":                                        1000,
-            })
+            }, timeout=60)
 
             if not hasattr(response, 'text') or not positive_value_exists(response.text):
                 success = False
@@ -1705,7 +1705,7 @@ def retrieve_ballotpedia_measures_by_district_from_api(google_civic_election_id,
             "filters[election][in]":    ballotpedia_elections_string,
             "filters[district][in]":    measure_district_string,
             "limit":                    1000,
-        })
+        }, timeout=60)
 
         if not hasattr(response, 'text') or not positive_value_exists(response.text):
             success = False
@@ -1795,7 +1795,7 @@ def retrieve_ballotpedia_candidate_image_from_api(ballotpedia_image_id, google_c
 
     response = requests.get(BALLOTPEDIA_API_FILES_URL + "/" + str(ballotpedia_image_id), params={
         "access_token": BALLOTPEDIA_API_KEY,
-    })
+    }, timeout=60)
 
     if not positive_value_exists(response.text):
         status += "NO_RESPONSE_TEXT_FOUND"
@@ -3050,7 +3050,7 @@ def retrieve_one_ballot_from_ballotpedia_api(latitude, longitude, incoming_googl
         response = requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
             "access_token": BALLOTPEDIA_API_KEY,
             "point": latitude_longitude,
-        })
+        }, timeout=60)
         structured_json = json.loads(response.text)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -3149,7 +3149,7 @@ def retrieve_one_ballot_from_ballotpedia_api_v4(latitude, longitude, google_civi
             params={
                 "lat": latitude,
                 "long": longitude,
-            })
+            }, timeout=60)
         structured_json = json.loads(response.text)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day
@@ -3194,7 +3194,7 @@ def retrieve_one_ballot_from_ballotpedia_api_v4(latitude, longitude, google_civi
         response = requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
             "districts": office_district_string,
             "election_date": election_day_text,
-        })
+        }, timeout=60)
         structured_json = json.loads(response.text)
 
         # Use Ballotpedia API call counter to track the number of queries we are doing each day

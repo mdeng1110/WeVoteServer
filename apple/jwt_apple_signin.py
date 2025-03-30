@@ -35,7 +35,7 @@ def _fetch_apple_public_key():
     global APPLE_PUBLIC_KEY
 
     if (APPLE_LAST_KEY_FETCH + APPLE_KEY_CACHE_EXP) < int(time()) or APPLE_PUBLIC_KEY is None:
-        key_payload = requests.get(APPLE_PUBLIC_KEY_URL).json()
+        key_payload = requests.get(APPLE_PUBLIC_KEY_URL, timeout=60).json()
         APPLE_PUBLIC_KEY = RSAAlgorithm.from_jwk(json.dumps(key_payload["keys"][0]))
         APPLE_LAST_KEY_FETCH = int(time())
 
