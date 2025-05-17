@@ -20,3 +20,4 @@ except ImportError as e:
         from config.local import *
     except ImportError as e:
         pass
+SESSION_COOKIE_SECURE = True
