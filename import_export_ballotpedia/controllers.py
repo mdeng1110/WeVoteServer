@@ -15,10 +15,10 @@ import json
 from measure.models import ContestMeasureListManager, ContestMeasureManager
 from office.models import ContestOfficeListManager, ContestOfficeManager
 from polling_location.models import PollingLocationManager
-import requests
 from voter.models import fetch_voter_id_from_voter_device_link, VoterAddressManager
 import wevote_functions.admin
 from wevote_functions.functions import convert_to_int, extract_state_code_from_address_string, positive_value_exists
+from security import safe_requests
 
 BALLOTPEDIA_API_KEY = get_environment_variable("BALLOTPEDIA_API_KEY")
 BALLOTPEDIA_API_CANDIDATES_URL = get_environment_variable("BALLOTPEDIA_API_CANDIDATES_URL")
@@ -288,7 +288,7 @@ def attach_ballotpedia_election_by_district_from_api(election, google_civic_elec
             status += "MISSING_DISTRICT_STRING_VALUES "
             continue
 
-        response = requests.get(BALLOTPEDIA_API_ELECTIONS_URL, params={
+        response = safe_requests.get(BALLOTPEDIA_API_ELECTIONS_URL, params={
             "access_token":             BALLOTPEDIA_API_KEY,
             "filters[district][in]":    district_string,
             "filters[date][eq]":        election_day_text,
@@ -567,7 +567,7 @@ def retrieve_ballotpedia_candidates_by_district_from_api(google_civic_election_i
     kind_of_batch = ""
     from import_export_batches.controllers_ballotpedia import store_ballotpedia_json_response_to_import_batch_system
     for ballotpedia_race_ids_string in chunks_of_race_id_strings:
-        response = requests.get(BALLOTPEDIA_API_CANDIDATES_URL, params={
+        response = safe_requests.get(BALLOTPEDIA_API_CANDIDATES_URL, params={
             "access_token": BALLOTPEDIA_API_KEY,
             "filters[race][in]": ballotpedia_race_ids_string,
             "limit": 1000,
@@ -702,7 +702,7 @@ def retrieve_ballot_items_from_polling_location(
 
         try:
             latitude_longitude = str(polling_location.latitude) + "," + str(polling_location.longitude)
-            response = requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
+            response = safe_requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
                 "access_token": BALLOTPEDIA_API_KEY,
                 "point": latitude_longitude,
             })
@@ -836,7 +836,7 @@ def retrieve_ballotpedia_ballot_items_from_polling_location_api_v4(
 
         try:
             # Get the electoral_districts at this lat/long
-            response = requests.get(
+            response = safe_requests.get(
                 BALLOTPEDIA_API_SAMPLE_BALLOT_ELECTIONS_URL,
                 headers=MAIL_HEADERS,
                 params={
@@ -889,7 +889,7 @@ def retrieve_ballotpedia_ballot_items_from_polling_location_api_v4(
             # chunks_of_district_strings.append(office_district_string)
 
             # Get the electoral_districts at this lat/long
-            response = requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
+            response = safe_requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
                 "districts": office_district_string,
                 "election_date": election_day_text,
             })
@@ -1098,7 +1098,7 @@ def retrieve_ballotpedia_ballot_items_for_one_voter_api_v4(
 
     try:
         # Get the electoral_districts at this lat/long
-        response = requests.get(
+        response = safe_requests.get(
             BALLOTPEDIA_API_SAMPLE_BALLOT_ELECTIONS_URL,
             headers=MAIL_HEADERS,
             params={
@@ -1153,7 +1153,7 @@ def retrieve_ballotpedia_ballot_items_for_one_voter_api_v4(
         # chunks_of_district_strings.append(office_district_string)
 
         # Get the electoral_districts at this lat/long
-        response = requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
+        response = safe_requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
             "districts": office_district_string,
             "election_date": election_day_text,
         })
@@ -1304,7 +1304,7 @@ def retrieve_ballotpedia_district_id_list_for_polling_location(
             pass
         else:
             latitude_longitude = str(polling_location.latitude) + "," + str(polling_location.longitude)
-            response = requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
+            response = safe_requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
                 "access_token": BALLOTPEDIA_API_KEY,
                 "point": latitude_longitude,
             })
@@ -1495,7 +1495,7 @@ def retrieve_ballotpedia_offices_by_district_from_api(google_civic_election_id, 
         for kind_of_election_dict in kind_of_election_list:
             ballotpedia_kind_of_election = kind_of_election_dict['kind_of_election']
 
-            response = requests.get(BALLOTPEDIA_API_RACES_URL, params={
+            response = safe_requests.get(BALLOTPEDIA_API_RACES_URL, params={
                 "access_token":                                 BALLOTPEDIA_API_KEY,
                 "filters[year][eq]":                            election_day_year,
                 "filters[office_district][in]":                 office_district_string,
@@ -1700,7 +1700,7 @@ def retrieve_ballotpedia_measures_by_district_from_api(google_civic_election_id,
     measures_already_retrieved = []
     from import_export_batches.controllers_ballotpedia import store_ballotpedia_json_response_to_import_batch_system
     for measure_district_string in chunks_of_district_strings:
-        response = requests.get(BALLOTPEDIA_API_MEASURES_URL, params={
+        response = safe_requests.get(BALLOTPEDIA_API_MEASURES_URL, params={
             "access_token":             BALLOTPEDIA_API_KEY,
             "filters[election][in]":    ballotpedia_elections_string,
             "filters[district][in]":    measure_district_string,
@@ -1793,7 +1793,7 @@ def retrieve_ballotpedia_candidate_image_from_api(ballotpedia_image_id, google_c
         }
         return results
 
-    response = requests.get(BALLOTPEDIA_API_FILES_URL + "/" + str(ballotpedia_image_id), params={
+    response = safe_requests.get(BALLOTPEDIA_API_FILES_URL + "/" + str(ballotpedia_image_id), params={
         "access_token": BALLOTPEDIA_API_KEY,
     })
 
@@ -3047,7 +3047,7 @@ def retrieve_one_ballot_from_ballotpedia_api(latitude, longitude, incoming_googl
     try:
         latitude_longitude = str(latitude) + "," + str(longitude)
         status += "LAT_LONG: " + str(latitude_longitude) + " "
-        response = requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
+        response = safe_requests.get(BALLOTPEDIA_API_CONTAINS_URL, params={
             "access_token": BALLOTPEDIA_API_KEY,
             "point": latitude_longitude,
         })
@@ -3143,7 +3143,7 @@ def retrieve_one_ballot_from_ballotpedia_api_v4(latitude, longitude, google_civi
 
     try:
         # Get the electoral_districts at this lat/long
-        response = requests.get(
+        response = safe_requests.get(
             BALLOTPEDIA_API_SAMPLE_BALLOT_ELECTIONS_URL,
             headers=MAIL_HEADERS,
             params={
@@ -3191,7 +3191,7 @@ def retrieve_one_ballot_from_ballotpedia_api_v4(latitude, longitude, google_civi
         # chunks_of_district_strings.append(office_district_string)
 
         # Get the electoral_districts at this lat/long
-        response = requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
+        response = safe_requests.get(BALLOTPEDIA_API_SAMPLE_BALLOT_RESULTS_URL, headers=MAIL_HEADERS, params={
             "districts": office_district_string,
             "election_date": election_day_text,
         })

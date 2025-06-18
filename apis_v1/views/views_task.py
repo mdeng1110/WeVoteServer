@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 import dateutil.parser
 import json
 import pytz
-import requests as python_requests
 import subprocess
 from django.http import HttpResponse
 from background_task import background
@@ -16,6 +15,7 @@ from scheduled_tasks.models import BackgroundTaskOutputManager
 from scheduled_tasks.task_models import WeTask
 from scheduled_tasks.task_models_completed import WeTaskCompleted
 import wevote_functions.admin
+from security import safe_requests
 
 logger = wevote_functions.admin.get_logger(__name__)
 
@@ -153,7 +153,7 @@ def we_task(task_parameters, verbose_name="", schedule='', name=''):  # pep8 par
 @background()
 def we_task_http(task_parameters, verbose_name="", schedule='', name=''):  # pep8 parsing is wrong, these are required
     # print("We_task HTTP parms: " + task_parameters)
-    r = python_requests.get(task_parameters)
+    r = safe_requests.get(task_parameters)
     output = r.text
     # print("r.text  ", r.text)
     nowdt = datetime.now(pytz.timezone("America/Los_Angeles"))
