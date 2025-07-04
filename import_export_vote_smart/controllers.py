@@ -615,7 +615,7 @@ def make_request(cls, method, **kwargs):
     if not kwargs.get('o'):
         kwargs['o'] = "JSON"
     url = get_api_route(cls, method)
-    resp = requests.get(url, params=kwargs)
+    resp = requests.get(url, params=kwargs, timeout=60)
     if resp.status_code == 200:
         return resp.json()
     else:
